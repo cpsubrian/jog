@@ -1,21 +1,35 @@
 {
-    "name": "jog2"
-  , "version": "0.5.0-2"
-  , "description": "JSON logging & reporting"
-  , "keywords": ["json", "log", "loggly"]
-  , "contributors": ["TJ Holowaychuk <tj@learnboost.com>", "Brian Link <cpsubrian@gmail.com>"]
-  , "repository": { "type": "git", "url": "git://github.com/cpsubrian/jog.git" }
-  , "bin": { "jog2": "./bin/jog" }
-  , "dependencies": {
-      "debug": "*",
-      "redis": "0.8.1",
-      "commander": "0.5.2",
-      "ms": "0.1.0"
-    }
-  , "devDependencies": {
-      "mocha": "*",
-      "should": "*"
-    }
-  , "main": "index"
-  , "engines": { "node": "*" }
+  "name": "jog2",
+  "version": "0.5.1-3",
+  "description": "JSON logging & reporting",
+  "keywords": [
+    "json",
+    "log",
+    "loggly"
+  ],
+  "contributors": [
+    "TJ Holowaychuk <tj@learnboost.com>",
+    "Brian Link <cpsubrian@gmail.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/cpsubrian/jog.git"
+  },
+  "bin": {
+    "jog2": "./bin/jog"
+  },
+  "dependencies": {
+    "debug": "*",
+    "commander": "0.5.2",
+    "ms": "0.1.0"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*",
+    "redis": "0.8.1"
+  },
+  "main": "index",
+  "engines": {
+    "node": "*"
+  }
 }
