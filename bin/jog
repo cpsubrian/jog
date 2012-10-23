@@ -77,11 +77,7 @@ var store = program.file
   ? new jog.FileStore(program.file)
   : program.redis
     ? new jog.RedisStore
-    : null;
-
-// no store
-
-if (!store) throw new Error('store required, use --file or --redis');
+    : new jog.StdStore;
 
 // -f
 
