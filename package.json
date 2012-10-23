@@ -1,6 +1,6 @@
 {
     "name": "jog2"
-  , "version": "0.5.0-1"
+  , "version": "0.5.0-2"
   , "description": "JSON logging & reporting"
   , "keywords": ["json", "log", "loggly"]
   , "contributors": ["TJ Holowaychuk <tj@learnboost.com>", "Brian Link <cpsubrian@gmail.com>"]
