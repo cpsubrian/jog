@@ -30,6 +30,23 @@ describe('Jog', function(){
       var log = new Jog(store);
       log.info('something happened');
     })
+
+    it('should replace named tokens', function (done) {
+      var store = {
+        add: function(obj) {
+          obj.type.should.equal('Hello Tobi!');
+          done();
+        }
+      };
+
+      var log = new Jog(store);
+      log.info(':greeting :name.first!', {
+        greeting: 'Hello',
+        name: {
+          first: 'Tobi'
+        }
+      });
+    })
   })
 
   describe('#ns(obj)', function(){
