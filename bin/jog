@@ -13,6 +13,10 @@ var maps = [];
 
 var selects = [];
 
+// reduce function
+
+var reduce;
+
 // --map
 
 program.on('map', function(val){
@@ -93,15 +97,29 @@ if (program.within) {
 // --reduce
 
 if (program.reduce) {
-  var reduce = new Function('$, _', 'return ' + program.reduce);
+  reduce = new Function('$, _', 'return ' + program.reduce);
 }
 
-// --output (check if formatter is valid)
+// --output
 
 var formatters = jog.formatters();
 if (program.output) {
-  if (!formatters[program.output] || !formatters[program.output].output) {
-    throw new Error('invalid output formatter');
+  var formatter = formatters[program.output];
+
+  if (!formatter || !formatter.output) {
+    throw new Error('invalid output formatter ' + program.output);
+  }
+
+  if (formatter.map) {
+    maps.push(formatter.map);
+  }
+
+  if (formatter.select) {
+    selects.push(formatter.select);
+  }
+
+  if (formatter.reduce) {
+    reduce = formatter.reduce;
   }
 }
 
