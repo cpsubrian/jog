@@ -7,7 +7,9 @@ module.exports = {
   select: function(obj) {
     return obj.level === 'info';
   },
-  output: function(obj) {
-    return obj.rainbow;
+  output: function(lines) {
+    lines.forEach(function(line) {
+      console.log(line.rainbow);
+    });
   }
 };

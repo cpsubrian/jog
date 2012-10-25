@@ -102,22 +102,32 @@ if (program.reduce) {
 
 // --output
 
-var formatters = jog.formatters(program.output);
-if (program.output) {
-  var formatter = formatters[program.output];
+var formatters = jog.formatters()
+  , formatter;
 
-  if (!formatter || !formatter.output) {
+if (program.output) {
+  formatter = formatters[program.output];
+  if (!formatter) {
+    throw new Error('no formatter found for ' + program.output);
+  }
+} else if (program.json) {
+  formatter = formatters.json;
+} else if (program.color) {
+  formatter = formatters.color;
+} else {
+  formatter = formatters.default;
+}
+
+if (formatter) {
+  if (!formatter.output) {
     throw new Error('invalid output formatter ' + program.output);
   }
-
   if (formatter.map) {
     maps.push(formatter.map);
   }
-
   if (formatter.select) {
     selects.push(formatter.select);
   }
-
   if (formatter.reduce) {
     reduce = formatter.reduce;
   }
@@ -155,7 +165,7 @@ stream.on('data', function(line){
   }
 
   if (ignoreEOF) {
-    output(ret);
+    formatter.output([ret]);
   } else {
     results.push(ret);
   }
@@ -166,23 +176,5 @@ stream.on('data', function(line){
 stream.on('end', function(){
   if (ignoreEOF) return;
   if (reduce) results = results.reduce(reduce);
-  output(results);
+  formatter.output(results);
 });
-
-/**
- * Output `obj`.
- */
-
-function output(obj) {
-  var line;
-  if (program.json) {
-    line = formatters.json.output(obj);
-  } else if (program.color) {
-    line = formatters.color.output(obj);
-  } else if (program.output) {
-    line = formatters[program.output].output(obj);
-  } else {
-    line = obj;
-  }
-  console.log(line);
-}
