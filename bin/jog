@@ -63,8 +63,9 @@ program
   .option('-s, --select <fn>', 'use the given <fn> for filtering')
   .option('-m, --map <fn>', 'use the given <fn> for mapping')
   .option('-r, --reduce <fn>', 'use the given <fn> for reducing')
-  .option('-c, --color', 'color the output')
-  .option('-j, --json', 'output JSON (--color will not work)')
+  .option('-o, --output <name>', 'use the <name> output formatter')
+  .option('-c, --color', 'color the output (shortcut for --output color')
+  .option('-j, --json', 'output JSON (shortcut for --output json)')
   .parse(process.argv);
 
 // determine store
@@ -93,6 +94,15 @@ if (program.within) {
 
 if (program.reduce) {
   var reduce = new Function('$, _', 'return ' + program.reduce);
+}
+
+// --output (check if formatter is valid)
+
+var formatters = jog.formatters();
+if (program.output) {
+  if (!formatters[program.output] || !formatters[program.output].output) {
+    throw new Error('invalid output formatter');
+  }
 }
 
 // setup
@@ -146,11 +156,15 @@ stream.on('end', function(){
  */
 
 function output(obj) {
+  var line;
   if (program.json) {
-    console.log(JSON.stringify(obj, null, 2));
+    line = formatters.json.output(obj);
   } else if (program.color) {
-    console.log(util.inspect(obj, false, 15, true));
+    line = formatters.color.output(obj);
+  } else if (program.output) {
+    line = formatters[program.output].output(obj);
   } else {
-    console.log(obj);
+    line = obj;
   }
+  console.log(line);
 }
