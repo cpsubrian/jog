@@ -13,6 +13,10 @@ var maps = [];
 
 var selects = [];
 
+// reduce function
+
+var reduce;
+
 // --map
 
 program.on('map', function(val){
@@ -63,8 +67,9 @@ program
   .option('-s, --select <fn>', 'use the given <fn> for filtering')
   .option('-m, --map <fn>', 'use the given <fn> for mapping')
   .option('-r, --reduce <fn>', 'use the given <fn> for reducing')
-  .option('-c, --color', 'color the output')
-  .option('-j, --json', 'output JSON (--color will not work)')
+  .option('-o, --output <name>', 'use the <name> output formatter')
+  .option('-c, --color', 'color the output (shortcut for --output color')
+  .option('-j, --json', 'output JSON (shortcut for --output json)')
   .parse(process.argv);
 
 // determine store
@@ -85,10 +90,41 @@ if (program.within) {
   selects.push(new Function('_', 'return Date.now() - _.timestamp <= ' + program.within));
 }
 
+// --output
+
+var formatters = jog.formatters()
+  , formatter;
+
+if (program.output) {
+  formatter = formatters[program.output];
+  if (!formatter) {
+    throw new Error('no formatter found for ' + program.output);
+  }
+} else if (program.json) {
+  formatter = formatters.json;
+} else if (program.color) {
+  formatter = formatters.color;
+} else {
+  formatter = formatters.default;
+}
+
+if (!formatter.output) {
+  throw new Error('invalid output formatter ' + program.output);
+}
+if (formatter.map) {
+  maps.push(formatter.map);
+}
+if (formatter.select) {
+  selects.push(formatter.select);
+}
+if (formatter.reduce) {
+  reduce = formatter.reduce;
+}
+
 // --reduce
 
 if (program.reduce) {
-  var reduce = new Function('$, _', 'return ' + program.reduce);
+  reduce = new Function('$, _', 'return ' + program.reduce);
 }
 
 // setup
@@ -123,7 +159,7 @@ stream.on('data', function(line){
   }
 
   if (ignoreEOF) {
-    output(ret);
+    formatter.output([ret]);
   } else {
     results.push(ret);
   }
@@ -134,19 +170,5 @@ stream.on('data', function(line){
 stream.on('end', function(){
   if (ignoreEOF) return;
   if (reduce) results = results.reduce(reduce);
-  output(results);
+  formatter.output(results);
 });
-
-/**
- * Output `obj`.
- */
-
-function output(obj) {
-  if (program.json) {
-    console.log(JSON.stringify(obj, null, 2));
-  } else if (program.color) {
-    console.log(util.inspect(obj, false, 15, true));
-  } else {
-    console.log(obj);
-  }
-}
