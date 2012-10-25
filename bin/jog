@@ -102,7 +102,7 @@ if (program.reduce) {
 
 // --output
 
-var formatters = jog.formatters();
+var formatters = jog.formatters(program.output);
 if (program.output) {
   var formatter = formatters[program.output];
 
