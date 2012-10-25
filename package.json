@@ -23,7 +23,8 @@
   "devDependencies": {
     "mocha": "*",
     "should": "*",
-    "redis": "0.8.1"
+    "redis": "0.8.1",
+    "through": "*"
   },
   "main": "index",
   "engines": {

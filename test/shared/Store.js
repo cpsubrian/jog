@@ -9,7 +9,7 @@ module.exports = function(store){
       log.write('info', 'compiling video', { vid: 'abc' });
       log.write('info', 'uploading video', { vid: 'abc' });
 
-      var stream = log.stream();
+      var stream = log.stream({ interval: 100 });
       var lines = [];
 
       stream.on('data', function(line){
@@ -53,7 +53,7 @@ module.exports = function(store){
       log.write('info', 'uploading video', { vid: 'abc' });
       log.clear(function(err){
         if (err) return done(err);
-        var stream = log.stream();
+        var stream = log.stream({ interval: 100 });
         var lines = [];
 
         stream.on('data', function(line){
