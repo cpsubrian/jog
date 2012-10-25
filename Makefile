@@ -9,6 +9,7 @@ test:
 		--require should \
 		test/jog.js \
 		test/FileStore.js \
-		test/RedisStore.js
+		test/RedisStore.js \
+		test/StdStore.js
 
 .PHONY: test
