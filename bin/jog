@@ -94,12 +94,6 @@ if (program.within) {
   selects.push(new Function('_', 'return Date.now() - _.timestamp <= ' + program.within));
 }
 
-// --reduce
-
-if (program.reduce) {
-  reduce = new Function('$, _', 'return ' + program.reduce);
-}
-
 // --output
 
 var formatters = jog.formatters()
@@ -118,19 +112,23 @@ if (program.output) {
   formatter = formatters.default;
 }
 
-if (formatter) {
-  if (!formatter.output) {
-    throw new Error('invalid output formatter ' + program.output);
-  }
-  if (formatter.map) {
-    maps.push(formatter.map);
-  }
-  if (formatter.select) {
-    selects.push(formatter.select);
-  }
-  if (formatter.reduce) {
-    reduce = formatter.reduce;
-  }
+if (!formatter.output) {
+  throw new Error('invalid output formatter ' + program.output);
+}
+if (formatter.map) {
+  maps.push(formatter.map);
+}
+if (formatter.select) {
+  selects.push(formatter.select);
+}
+if (formatter.reduce) {
+  reduce = formatter.reduce;
+}
+
+// --reduce
+
+if (program.reduce) {
+  reduce = new Function('$, _', 'return ' + program.reduce);
 }
 
 // setup
